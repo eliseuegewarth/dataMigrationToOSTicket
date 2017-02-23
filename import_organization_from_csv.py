@@ -13,8 +13,8 @@ def import_organization_from_csv(filename):
     # cursor = cnx.cursor()
 
     add_organization = ("INSERT INTO ost_organization "
-                        "(name, extra) "
-                        "VALUES (%(name)s, %(extra)s)"
+                        "(name) "
+                        "VALUES (%(name)s)"
                         )
     id_position = 0
     org_name_position = 1
@@ -26,7 +26,6 @@ def import_organization_from_csv(filename):
             if not first:
                 data_organization = {
                     'name': row[org_name_position],
-                    'extra': row[id_position]
                     }
                 # cursor.execute(add_organization, data_organization)
                 print (add_organization % data_organization)
