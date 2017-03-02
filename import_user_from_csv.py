@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import csv
 import sys
-from datetime import date, datetime
+
 import mysql.connector
 
 def main(argv):
@@ -9,22 +9,18 @@ def main(argv):
 
 def import_organization_from_csv(filename):
     ## Do not run the command below in production ##
-    # truncate()
+    truncate()
 
     cnx = mysql.connector.connect(user='osticket', password='secret', database='osticket', host='127.0.0.1', port='3306')
     cursor = cnx.cursor()
 
-    add_organization = ("INSERT INTO ost_organization "
-                        "(name, created, updated) "
-                        "VALUES (%(name)s, %(created)s, %(updated)s)"
+    add_organization = ("INSERT INTO ost_user "
+                        "(name, created) "
+                        "VALUES (%(name)s, %(created)s)"
                         )
     id_position = 0
     org_name_position = 1
-    
-    now  = datetime.now().date()
-    organization_map = open('organizacoes_map.csv', 'w')
-    csv_template_string = "{0},{1}".format('"sigi_id"' , '"OSTicket_id"')
-    print (csv_template_string, end="", file=organization_map)
+
 
     with open(filename) as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -33,8 +29,7 @@ def import_organization_from_csv(filename):
             if not first:
                 data_organization = {
                     'name': row[org_name_position],
-                    'created': now,
-                    'updated': now,
+                    'created': CURRENT_TIMESTAMP,
                     }
                 cursor.execute(add_organization, data_organization)
                 last_organization = cursor.lastrowid
@@ -53,7 +48,7 @@ def import_organization_from_csv(filename):
 def truncate():
     cnx = mysql.connector.connect(user='osticket', password='secret', database='osticket', host='127.0.0.1', port='3306')
     cursor = cnx.cursor()
-    query = """truncate table ost_organization""" 
+    query = """truncate table ost_user""" 
     cursor.execute(query)
     cnx.commit()
     cursor.close()
