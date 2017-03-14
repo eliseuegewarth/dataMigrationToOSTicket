@@ -24,7 +24,7 @@ def import_organization_from_csv(filename):
     now  = datetime.now().date()
     organization_map = open('organizacoes_map.csv', 'w')
     csv_template_string = "{0},{1}".format('"sigi_id"' , '"OSTicket_id"')
-    print (csv_template_string, end="", file=organization_map)
+    print (csv_template_string, end="\n", file=organization_map)
 
     with open(filename) as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -39,7 +39,7 @@ def import_organization_from_csv(filename):
                 cursor.execute(add_organization, data_organization)
                 last_organization = cursor.lastrowid
                 csv_template_string = '"{0}","{1}"'.format(row[id_position] , last_organization)
-                print (csv_template_string)
+                print (csv_template_string, end="\n", file=organization_map)
                 
             else:
                 first = False
